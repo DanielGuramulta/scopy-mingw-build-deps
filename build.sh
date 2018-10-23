@@ -220,13 +220,16 @@ build_qwt() {
 	sed -i "s/^QWT_CONFIG\\s*+=\\s*QwtDesigner$/#/g" qwtconfig.pri
 	sed -i "s/^QWT_CONFIG\\s*+=\\s*QwtExamples$/#/g" qwtconfig.pri
 
+	# Enable debug on every build for every platform
+	sed -e 's/.*CONFIG.*+=.*release$/CONFIG += debug_and_release/g' qwtbuild.pri
+
 	# Fix prefix
 	sed -i "s/^\\s*QWT_INSTALL_PREFIX.*$/QWT_INSTALL_PREFIX=\"\"/g" qwtconfig.pri
 
 	cd ${WORKDIR}/qwt/src
 	qmake
-	make INSTALL_ROOT="/c/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Release install
-	make INSTALL_ROOT="${WORKDIR}/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Release install
+	make INSTALL_ROOT="/c/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Debug install
+	make INSTALL_ROOT="${WORKDIR}/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Debug install
 }
 
 build_qwtpolar() {
@@ -242,13 +245,20 @@ build_qwtpolar() {
 	sed -i "s/^QWT_POLAR_CONFIG\\s*+=\\s*QwtPolarDesigner$/#/g" qwtpolarconfig.pri
 	sed -i "s/^QWT_POLAR_CONFIG\\s*+=\\s*QwtPolarExamples$/#/g" qwtpolarconfig.pri
 
+	# Enable debug on every build for every platform
+	sed -e 's/.*CONFIG.*+=.*release$/CONFIG += debug_and_release/g' qwtpolarbuild.pri
+
+	# Link against qwtd (qwt debug lib) 
+	sed -e 's/CONFIG.*+=.*qwt$/CONFIG += qwtd/g' qwtpolarconfig.pri
+
 	# Fix prefix
 	sed -i "s/^\\s*QWT_POLAR_INSTALL_PREFIX.*$/QWT_POLAR_INSTALL_PREFIX=\"\"/g" qwtpolarconfig.pri
 
+
 	cd ${WORKDIR}/qwtpolar/src
-	qmake LIBS+="-lqwt"
-	make INSTALL_ROOT="/c/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Release install
-	make INSTALL_ROOT="${WORKDIR}/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Release install
+	qmake LIBS+="-lqwtd"
+	make INSTALL_ROOT="/c/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Debug install
+	make INSTALL_ROOT="${WORKDIR}/msys64/${MINGW_VERSION}" -j ${JOBS} -f Makefile.Debug install
 }
 
 build_griio() {
@@ -280,8 +290,8 @@ build_libsigrok
 build_libsigrokdecode
 
 # Fix DLLs installed in the wrong path
-mv ${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwt.dll \
-	${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwtpolar.dll \
+mv ${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwtd.dll \
+	${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwtpolard.dll \
 	${WORKDIR}/msys64/${MINGW_VERSION}/bin
 
 rm -rf ${WORKDIR}/msys64/${MINGW_VERSION}/doc \
