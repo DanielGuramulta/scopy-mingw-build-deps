@@ -69,12 +69,12 @@ pacman -U --noconfirm http://repo.msys2.org/mingw/${ARCH}/mingw-w64-${ARCH}-llvm
 pacman --force --noconfirm -Sy ${DEPENDENCIES}
 
 # Install an older version of Qt due to uic.exe issues
-wget -q http://repo.msys2.org/mingw/${ARCH}/mingw-w64-${ARCH}-qt5-5.9.1-1-any.pkg.tar.xz
-pacman -U --force --noconfirm mingw-w64-${ARCH}-qt5-5.9.1-1-any.pkg.tar.xz
+# wget -q http://repo.msys2.org/mingw/${ARCH}/mingw-w64-${ARCH}-qt5-5.9.1-1-any.pkg.tar.xz
+# pacman -U --force --noconfirm mingw-w64-${ARCH}-qt5-5.9.1-1-any.pkg.tar.xz
 pacman -U --noconfirm http://repo.msys2.org/mingw/${ARCH}/mingw-w64-${ARCH}-curl-7.61.1-2-any.pkg.tar.xz
 
-# Fix Qt5 spec files
-sed -i "s/\$\${CROSS_COMPILE}/${ARCH}-w64-mingw32-/" /${MINGW_VERSION}/share/qt5/mkspecs/win32-g++/qmake.conf
+# # Fix Qt5 spec files
+# sed -i "s/\$\${CROSS_COMPILE}/${ARCH}-w64-mingw32-/" /${MINGW_VERSION}/share/qt5/mkspecs/win32-g++/qmake.conf
 
 build_libiio() {
 	git clone --depth 1 https://github.com/analogdevicesinc/libiio.git ${WORKDIR}/libiio
@@ -271,18 +271,18 @@ build_markdown
 build_cheetah
 build_libvolk
 build_gnuradio
-build_libiio
-build_libad9361
-build_griio
-build_qwt
-build_qwtpolar
-build_libsigrok
-build_libsigrokdecode
+# build_libiio
+# build_libad9361
+# build_griio
+# build_qwt
+# build_qwtpolar
+# build_libsigrok
+# build_libsigrokdecode
 
 # Fix DLLs installed in the wrong path
-mv ${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwt.dll \
-	${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwtpolar.dll \
-	${WORKDIR}/msys64/${MINGW_VERSION}/bin
+#mv ${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwt.dll \
+#	${WORKDIR}/msys64/${MINGW_VERSION}/lib/qwtpolar.dll \
+#	${WORKDIR}/msys64/${MINGW_VERSION}/bin
 
 rm -rf ${WORKDIR}/msys64/${MINGW_VERSION}/doc \
 	${WORKDIR}/msys64/${MINGW_VERSION}/share/doc \
